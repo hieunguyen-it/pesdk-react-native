@@ -111,7 +111,34 @@ const struct RN_IMGLY_Constants RN_IMGLY = {
     [updatedDictionary setValue:exportDictionary forKeyPath:@"export"];
 
     configuration = [[PESDKConfiguration alloc] initWithBuilder:^(PESDKConfigurationBuilder * _Nonnull builder) {
-      builder.assetCatalog = assetCatalog;
+        // Change Icon Tool
+        [builder configurePhotoEditViewController:^(PESDKPhotoEditViewControllerOptionsBuilder * _Nonnull options) {
+          options.actionButtonConfigurationBlock = ^(PESDKMenuCollectionViewCell * _Nonnull cell, PESDKPhotoEditMenuItem * _Nonnull menuItem) {
+            if ([menuItem.toolMenuItem.title isEqualToString:@"Transform"]) {
+              cell.iconImageView.image = [UIImage imageNamed:@"Rotate"];
+            }
+            if ([menuItem.toolMenuItem.title isEqualToString:@"Adjust"]) {
+              cell.iconImageView.image = [UIImage imageNamed:@"Adjust"];
+            }
+            if ([menuItem.toolMenuItem.title isEqualToString:@"Filter"]) {
+              cell.iconImageView.image = [UIImage imageNamed:@"Filter"];
+            }
+          };
+        }];
+        
+        // Change Name Tool
+        [ PESDK setLocalizationDictionary : @ {
+          @ "en" : @ {
+            @ "pesdk_transform_title_name" : @ "Rotate" ,
+            @ "pesdk_focus_title_name" : @ "Smooth" ,
+          }
+        }];
+        
+        // Setting Theme
+        builder.theme = PESDKTheme.light;
+        builder.theme.backgroundColor = UIColor.whiteColor;
+        builder.theme.menuBackgroundColor = UIColor.whiteColor;
+   
       [builder configureFromDictionary:updatedDictionary error:&error];
       IMGLYConfigurationBlock configureWithBuilder = RN_IMGLY_ImglyKit.configureWithBuilder;
       if (configureWithBuilder != nil) {
@@ -119,7 +146,7 @@ const struct RN_IMGLY_Constants RN_IMGLY = {
       }
     }];
     if (error != nil) {
-      RCTLogError(@"Error while updating configuration: %@", error);
+      RCTLogError(@"Error while updating configuration: %@", error);a
       reject(RN_IMGLY.kErrorUnableToLoad, [NSString RN_IMGLY_string:@"Unable to update configuration." withError:error], error);
       return;
     }
@@ -140,7 +167,9 @@ const struct RN_IMGLY_Constants RN_IMGLY = {
     self.mediaEditViewController = mediaEditViewController;
 
     UIViewController *currentViewController = RCTPresentedViewController();
+      
     [currentViewController presentViewController:self.mediaEditViewController animated:YES completion:NULL];
+      
   });
 }
 
