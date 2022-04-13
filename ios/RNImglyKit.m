@@ -146,7 +146,7 @@ const struct RN_IMGLY_Constants RN_IMGLY = {
       }
     }];
     if (error != nil) {
-      RCTLogError(@"Error while updating configuration: %@", error);a
+      RCTLogError(@"Error while updating configuration: %@", error);
       reject(RN_IMGLY.kErrorUnableToLoad, [NSString RN_IMGLY_string:@"Unable to update configuration." withError:error], error);
       return;
     }
